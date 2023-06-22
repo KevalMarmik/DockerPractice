@@ -31,8 +31,8 @@ pipeline{
 		}
 		stage('Start Service') {
           		steps {
-                		sh 'sudo systemctl start docker'
-				sh 'sudo usermod -a -G docker ec2-user'
+                		sh 'systemctl start docker'
+				sh 'usermod -a -G docker ec2-user'
             		}
         	}
       		stage('Build Docker Image') {
