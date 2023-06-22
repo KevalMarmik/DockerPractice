@@ -7,7 +7,7 @@ pipeline{
 	stages{
 		stage ('fetch-latest-code'){
 			steps{
-				git branch: 'main', url: 'hhttps://github.com/KevalMarmik/DockerPractice.git'
+				git branch: 'main', url: 'https://github.com/KevalMarmik/DockerPractice.git'
 			}
 		}
 	
