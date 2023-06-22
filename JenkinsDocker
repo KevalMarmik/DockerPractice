@@ -1,0 +1,64 @@
+pipeline{
+	agent any
+	environment {
+		AWS_ACCESS_KEY_ID     = credentials('94237946-e563-4a2f-884e-2f0039fe4f4c')
+		AWS_SECRET_ACCESS_KEY = credentials('6b10d1f9-d0a8-44fb-8250-21a91c9c9123')
+	}
+	stages{
+		stage ('fetch-latest-code'){
+			steps{
+				git branch: 'main', url: 'https://github.com/KevalMarmik/DockerPractice.git'
+			}
+		}
+	
+		stage ('TF INIT'){
+			steps{
+		
+					sh 'terraform init'
+				
+			}
+		}
+		stage ('TF PLAN'){
+			steps{
+					sh 'terraform plan'	
+			}
+		}
+		stage ('TF APPLY'){
+			steps{
+				
+					sh 'terraform apply --auto-approve'
+				
+				
+			}
+		}
+    stage('Build Docker Image') {
+            steps {
+                // Copy the Dockerfile to the workspace
+                sh 'cp path/to/Dockerfile .'
+
+                // Build Docker image from Dockerfile
+                sh 'docker build -t your_image_name:your_tag .'
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                // Login to Docker registry
+                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                }
+
+                // Push Docker image to registry
+                sh 'docker push your_image_name:your_tag'
+            }
+        }
+
+        stage('Deployment') {
+            steps {
+                // Deploy Docker image on EC2 instance
+                sh 'ssh user@your_ec2_ip_address "docker run -d your_image_name:your_tag"'
+            }
+        }
+    }
+	}
+}
