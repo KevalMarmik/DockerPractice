@@ -29,6 +29,11 @@ pipeline{
 					sh 'terraform apply --auto-approve'		
 			}
 		}
+		stage('Install Docker'){
+			steps{
+				sh 'sudo yum install docker -y'
+			}
+		}
 		
       		stage('Build Docker Image') {
           		steps {
