@@ -29,12 +29,6 @@ pipeline{
 					sh 'terraform apply --auto-approve'		
 			}
 		}
-		stage('Start Service') {
-          		steps {
-                		sh 'systemctl start docker'
-				sh 'usermod -a -G docker ec2-user'
-            		}
-        	}
       		stage('Build Docker Image') {
           		steps {
                 		sh 'docker build -t firstimage .'
