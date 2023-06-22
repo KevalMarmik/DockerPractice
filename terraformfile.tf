@@ -16,21 +16,11 @@ provider "aws" {
   region     = "us-east-1"
 }
 
-resource "aws_security_group" "myec2" {
-  name        = "myec2-security-group"
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 resource "aws_instance" "myec2" {
    ami = "ami-0bef6cc322bfff646"
    instance_type = "t2.micro"
    key_name = "key"
-   vpc_security_group_ids = [aws_security_group.myec2.id]
+   vpc_security_group_ids = ["sg-094c99b2b50a02646"]
    tags = {
       Name = "Example"
    }
