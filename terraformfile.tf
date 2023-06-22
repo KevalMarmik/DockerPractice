@@ -15,6 +15,7 @@ terraform {
 provider "aws" {
   region     = "us-east-1"
 }
+
 resource "aws_security_group" "myec2" {
   name        = "myec2-security-group"
   ingress {
@@ -24,6 +25,7 @@ resource "aws_security_group" "myec2" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
 resource "aws_instance" "myec2" {
    ami = "ami-0bef6cc322bfff646"
    instance_type = "t2.micro"
