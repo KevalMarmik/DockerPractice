@@ -50,7 +50,7 @@ pipeline{
         stage('Deployment') {
             steps {
                 // Deploy Docker image on EC2 instance
-                sh 'ssh user@your_ec2_ip_address "docker run -d your_image_name:your_tag"'
+                sh 'ssh ec2-user@ec2_instance_ip "docker run -d firstimage"'
             }
         }
     }
