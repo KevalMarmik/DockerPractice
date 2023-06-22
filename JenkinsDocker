@@ -26,30 +26,24 @@ pipeline{
 		stage ('TF APPLY'){
 			steps{
 				
-					sh 'terraform apply --auto-approve'
-				
-				
+					sh 'terraform apply --auto-approve'		
 			}
 		}
+		
     stage('Build Docker Image') {
             steps {
-                // Copy the Dockerfile to the workspace
-                sh 'cp path/to/Dockerfile .'
-
-                // Build Docker image from Dockerfile
-                sh 'docker build -t your_image_name:your_tag .'
+                sh 'docker build -t firstimage .'
             }
         }
 
         stage('Docker Push') {
             steps {
-                // Login to Docker registry
-                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+	    	withDockerRegistry(credentialsId: '19c56ce4-886e-4f03-8f72-37e1ab06629f') {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                 }
 
                 // Push Docker image to registry
-                sh 'docker push your_image_name:your_tag'
+                sh 'docker push firstimage'
             }
         }
 
