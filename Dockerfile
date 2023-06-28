@@ -1,7 +1,7 @@
 
 FROM ubuntu:latest
 
-RUN sudo yum update && sudo yum install -y ubuntu
+RUN yum update && yum install -y ubuntu
 
 RUN mkdir new
 
