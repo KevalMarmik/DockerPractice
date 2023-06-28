@@ -11,24 +11,6 @@ pipeline{
 			}
 		}
 	
-		stage ('TF INIT'){
-			steps{
-		
-					sh 'terraform init'
-				
-			}
-		}
-		stage ('TF PLAN'){
-			steps{
-					sh 'terraform plan'	
-			}
-		}
-		stage ('TF APPLY'){
-			steps{
-				
-					sh 'terraform apply --auto-approve'		
-			}
-		}
       		stage('Build Docker Image') {
           		steps {
                 		sh 'docker build -t firstimage .'
@@ -37,7 +19,7 @@ pipeline{
 
         	stage('Docker Push') {
             		steps {
-         			withDockerRegistry(credentialsId: '19c56ce4-886e-4f03-8f72-37e1ab06629f') {
+				withDockerRegistry(credentialsId: '95efda44-45a4-44d3-9f6a-035a9ed1dc1b', url: 'https://hub.docker.com/') {
                     			sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                 		}
 				// Push Docker image to registry
