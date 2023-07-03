@@ -2,6 +2,11 @@ pipeline{
 	agent {
 		label 'mynode'
 	}
+
+	environment {
+		 DOCKER_REGISTRY_CREDENTIALS = '95efda44-45a4-44d3-9f6a-035a9ed1dc1b'
+		//AWS_SECRET_ACCESS_KEY = credentials('9e716d7e-a124-4e7f-b5cf-369df8755c8b')
+	}
 	
 	stages{
 		stage ('fetch-latest-code'){
@@ -15,13 +20,14 @@ pipeline{
                 		sh 'docker build -t firstimage .'
             		}
         	}
+		stage('Docker Login') {
+          		steps {
+                		sh 'docker login'
+            		}
+        	}
 
         	stage('Docker Push') {
             		steps {
-				withDockerRegistry(credentialsId: '95efda44-45a4-44d3-9f6a-035a9ed1dc1b', url: 'https://hub.docker.com/') {
-                    			sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                		}
-				// Push Docker image to registry
                 		sh 'docker push firstimage'
             		}
         	}
