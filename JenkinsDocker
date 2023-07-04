@@ -22,7 +22,16 @@ pipeline{
         	}
 		stage('Docker Login') {
           		steps {
-                		sh 'docker login'
+				withCredentials([usernamePassword(credentialsId: env.DOCKER_REGISTRY_CREDENTIALS, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                   		 	// Set the environment variables for docker login
+                    			sh 'export DOCKER_USERNAME=$DOCKER_USERNAME'
+                    			sh 'export DOCKER_PASSWORD=$DOCKER_PASSWORD'
+
+                    			// Log in to the Docker registry
+                    			sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+
+                		//sh 'docker login'
+				}
             		}
         	}
 
