@@ -33,12 +33,12 @@ pipeline{
                    		 	// Set the environment variables for docker login
                     			//sh 'export DOCKER_USERNAME=$DOCKER_USERNAME'
                     			//sh 'export DOCKER_PASSWORD=$DOCKER_PASSWORD'
-					withDockerRegistry(credentialsId: '95efda44-45a4-44d3-9f6a-035a9ed1dc1b', toolName: 'Docker') {
+					
                     			// Log in to the Docker registry
                     			sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
 
                 		//sh 'docker login'
-				}
+				
             		}
         	}
 
