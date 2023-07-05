@@ -32,11 +32,8 @@ pipeline{
 				// Log in to the Docker registry with credentials
                 		withCredentials([usernamePassword(credentialsId: env.DOCKER_REGISTRY_CREDENTIALS, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     		// Create the Docker configuration file
-                    		sh 'mkdir -p $HOME/.docker'
-                    		sh 'echo "{\\"auths\\":{\\"$DOCKER_REGISTRY_URL\\":{\\"auth\\":\\"$(echo -n $DOCKER_USERNAME:$DOCKER_PASSWORD | base64 -w0)\\"}}}" > $HOME/.docker/config.json'
-
-
-                		//sh 'docker login'
+                    		
+                		sh 'docker login'
 				
             		}
         	}
