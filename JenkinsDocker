@@ -5,7 +5,7 @@ pipeline{
 
 	environment {
 		 DOCKER_REGISTRY_CREDENTIALS = '95efda44-45a4-44d3-9f6a-035a9ed1dc1b'
-		//AWS_SECRET_ACCESS_KEY = credentials('9e716d7e-a124-4e7f-b5cf-369df8755c8b')
+		 DOCKER_REGISTRY_URL = 'docker.io'
 	}
 	
 	stages{
@@ -24,18 +24,17 @@ pipeline{
 	
       		stage('Build Docker Image') {
           		steps {
-                		sh 'docker build -t firstimage .'
+                		sh 'docker build -t firstimage:latest .'
             		}
         	}
 		stage('Docker Login') {
           		steps {
-				//withCredentials([usernamePassword(credentialsId: env.DOCKER_REGISTRY_CREDENTIALS, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                   		 	// Set the environment variables for docker login
-                    			//sh 'export DOCKER_USERNAME=$DOCKER_USERNAME'
-                    			//sh 'export DOCKER_PASSWORD=$DOCKER_PASSWORD'
-					
-                    			// Log in to the Docker registry
-                    			sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+				// Log in to the Docker registry with credentials
+                		withCredentials([usernamePassword(credentialsId: env.DOCKER_REGISTRY_CREDENTIALS, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    		// Create the Docker configuration file
+                    		sh 'mkdir -p $HOME/.docker'
+                    		sh 'echo "{\\"auths\\":{\\"$DOCKER_REGISTRY_URL\\":{\\"auth\\":\\"$(echo -n $DOCKER_USERNAME:$DOCKER_PASSWORD | base64 -w0)\\"}}}" > $HOME/.docker/config.json'
+
 
                 		//sh 'docker login'
 				
@@ -44,14 +43,14 @@ pipeline{
 
         	stage('Docker Push') {
             		steps {
-                		sh 'docker push firstimage'
+                		sh 'docker push firstimage:latest'
             		}
         	}
 
         	stage('Deployment') {
             		steps {
                 		// Deploy Docker image on EC2 instance
-                		sh 'ssh ec2-user@ec2_instance_ip "docker run -d firstimage"'
+                		sh 'ssh ec2-user@ec2_instance_ip "docker run -d firstimage:latest"'
             		}
         	}
     	}
