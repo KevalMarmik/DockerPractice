@@ -17,12 +17,12 @@ provider "aws" {
 }
 
 resource "aws_instance" "myec2" {
-   ami = "ami-090e0fc566929d98b"
+   ami = "ami-04823729c75214919"
    instance_type = "t2.micro"
    key_name = "key"
    vpc_security_group_ids = ["sg-094c99b2b50a02646"]
    tags = {
-      Name = "Example"
+      Name = "Node"
    }
 }
 output "ec2_instance_ip" {
