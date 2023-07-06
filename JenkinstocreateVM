@@ -10,11 +10,6 @@ pipeline{
 				git branch: 'main', url: 'https://github.com/KevalMarmik/DockerPractice.git'
 			}
 		}
-		stage ('TF VALIDATE'){
-			steps{
-					sh 'terraform init'	
-			}
-		}
 		stage ('TF INIT'){
 			steps{
 					sh 'terraform init'				
