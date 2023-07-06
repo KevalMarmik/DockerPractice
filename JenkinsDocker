@@ -2,54 +2,46 @@ pipeline{
 	agent {
 		label 'mynode'
 	}
-
 	environment {
-		 DOCKER_REGISTRY_CREDENTIALS = '95efda44-45a4-44d3-9f6a-035a9ed1dc1b'
-		 DOCKER_REGISTRY_URL = 'docker.io'
-	}
-	
+		DOCKERHUB_CREDENTIALS=credentials('docker_user_psw')
+	}	
 	stages{
 		stage ('fetch-latest-code'){
 			steps{
 				git branch: 'main', url: 'https://github.com/KevalMarmik/DockerPractice.git'
 			}
 		}
-
 		stage('Start Docker') {
           		steps {
                 		sh 'sudo systemctl start docker'
 				sh 'sudo usermod -a -G docker ec2-user'
             		}
         	}
-	
       		stage('Build Docker Image') {
           		steps {
-                		sh 'docker build -t firstimage:latest .'
+                		sh 'docker build -t kevalmarmik/practice:docimage .'
             		}
         	}
 		stage('Docker Login') {
           		steps {
-				// Log in to the Docker registry with credentials
-                		withCredentials([usernamePassword(credentialsId: env.DOCKER_REGISTRY_CREDENTIALS, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    		// Create the Docker configuration file
-                    		
-                		sh 'docker login'
-				
+                		sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'				
             		}
         	}
-
         	stage('Docker Push') {
             		steps {
-                		sh 'docker push firstimage:latest'
+                		sh 'docker push kevalmarmik/practice:docimage'
             		}
         	}
-
         	stage('Deployment') {
             		steps {
-                		// Deploy Docker image on EC2 instance
-                		sh 'ssh ec2-user@ec2_instance_ip "docker run -d firstimage:latest"'
+                		sh 'ssh ec2-user@ec2_instance_ip "docker run -d kevalmarmik/practice:docimage"'
             		}
         	}
     	}
+	post {
+		always {
+			sh 'docker logout'
+		}
+	}
 }	
 
