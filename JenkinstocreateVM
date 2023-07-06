@@ -1,36 +1,33 @@
 pipeline{
 	agent any
 	environment {
-		AWS_ACCESS_KEY_ID     = credentials('9e65693f-2f0d-494c-a7e2-30af2af23189')
-		AWS_SECRET_ACCESS_KEY = credentials('9e716d7e-a124-4e7f-b5cf-369df8755c8b')
+		AWS_ACCESS_KEY_ID     = credentials('secret_text_access_key')
+		AWS_SECRET_ACCESS_KEY = credentials('secret_text_secret_access_key')
 	}
 	stages{
-		stage ('fetch-latest-code'){
+		stage ('CODE FETCH FROM GITHUB'){
 			steps{
 				git branch: 'main', url: 'https://github.com/KevalMarmik/DockerPractice.git'
 			}
 		}
-	
+		stage ('TF VALIDATE'){
+			steps{
+					sh 'terraform init'	
+			}
+		}
 		stage ('TF INIT'){
 			steps{
-		
-					sh 'terraform init'
-				
+					sh 'terraform init'				
 			}
 		}
 		stage ('TF PLAN'){
 			steps{
-				//withCredentials([string(credentialsId: '94237946-e563-4a2f-884e-2f0039fe4f4c', variable: ''),
-				//		string(credentialsId: '6b10d1f9-d0a8-44fb-8250-21a91c9c9123', variable: '')]) {
 					sh 'terraform plan'	
 			}
 		}
 		stage ('TF APPLY'){
-			steps{
-				
-					sh 'terraform apply --auto-approve'
-				
-				
+			steps{				
+					sh 'terraform apply --auto-approve'				
 			}
 		}
 	}
