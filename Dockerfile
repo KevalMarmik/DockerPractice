@@ -1,7 +1,6 @@
 FROM centos
+RUN yum install git -y
+RUN touch /tmp/devops
 
-RUN mkdir new
 
-WORKDIR /new
-
-RUN touch devopsclass
+ENTRYPOINT ["echo", "hello world"]
