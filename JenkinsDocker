@@ -1,6 +1,6 @@
 pipeline{
 	agent {
-		label 'mynode'
+		label 'node1'
 	}
 	environment {
 		DOCKERHUB_CREDENTIALS=credentials('docker_user_psw')
