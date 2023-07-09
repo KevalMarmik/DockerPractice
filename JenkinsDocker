@@ -15,6 +15,7 @@ pipeline{
           		steps {
                 		sh 'sudo systemctl start docker'
 				sh 'sudo usermod -aG docker ec2-user'
+				sh 'sudo chmod 666 /var/run/docker.sock'
             		}
         	}
       		stage('Build Docker Image') {
